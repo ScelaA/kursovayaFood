@@ -32,6 +32,7 @@
             android:id="@+id/tv_meal_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_area"
             android:text="awdawd"
             android:layout_weight="1"
             android:textColor="@color/g_black"/>
@@ -40,6 +41,7 @@
             android:id="@+id/tv_meal_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_category"
             android:text="adswad"
             android:layout_weight="1"
             android:textColor="@color/g_black"/>
