@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kursovayafood.R
 import com.example.kursovayafood.adapters.CategoriesRecyclerAdapter
-
 import com.example.kursovayafood.data.pojo.*
 import com.example.kursovayafood.databinding.FragmentHomeBinding
 import com.example.kursovayafood.mvvm.DetailsMVVM
@@ -48,11 +47,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
 
-
+    private lateinit var myAdapter: CategoriesRecyclerAdapter
     lateinit var binding: FragmentHomeBinding
 
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        detailMvvm = ViewModelProviders.of(this)[DetailsMVVM::class.java]
+        binding = FragmentHomeBinding.inflate(layoutInflater)
+        myAdapter = CategoriesRecyclerAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         showLoadingCase()
 
 
-
+        prepareCategoryRecyclerView()
+        preparePopularMeals()
         onRndomMealClick()
         onRandomLongClick()
 
@@ -76,7 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mainFragMVVM.observeMealByCategory().observe(viewLifecycleOwner, object : Observer<MealsResponse> {
             override fun onChanged(t: MealsResponse?) {
                 val meals = t!!.meals
-
+                setMealsByCategoryAdapter(meals)
                 cancelLoadingCase()
             }
 
@@ -86,7 +91,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mainFragMVVM.observeCategories().observe(viewLifecycleOwner, object : Observer<CategoryResponse> {
             override fun onChanged(t: CategoryResponse?) {
                 val categories = t!!.categories
-
+                setCategoryAdapter(categories)
 
             }
         })
@@ -105,6 +110,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
 
 
+
+        myAdapter.onItemClicked(object : CategoriesRecyclerAdapter.OnItemCategoryClicked {
+            override fun onClickListener(category: Category) {
+                val intent = Intent(activity, MealActivity::class.java)
+                intent.putExtra(CATEGORY_NAME, category.strCategory)
+                startActivity(intent)
+            }
+
+        })
 
 
 
@@ -188,6 +202,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun setMealsByCategoryAdapter(meals: List<Meal>) {
 
+    }
+
+    private fun setCategoryAdapter(categories: List<Category>) {
+        myAdapter.setCategoryList(categories)
+    }
+
+    private fun prepareCategoryRecyclerView() {
+        binding.recyclerView.apply {
+            adapter = myAdapter
+            layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun preparePopularMeals() {
+        binding.recViewMealsPopular.apply {
+            layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+        }
+    }
 
 }
