@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kursovayafood.R
 import com.example.kursovayafood.adapters.CategoriesRecyclerAdapter
+import com.example.kursovayafood.adapters.MostPopularRecyclerAdapter
+import com.example.kursovayafood.adapters.OnItemClick
+import com.example.kursovayafood.adapters.OnLongItemClick
 import com.example.kursovayafood.data.pojo.*
 import com.example.kursovayafood.databinding.FragmentHomeBinding
 import com.example.kursovayafood.mvvm.DetailsMVVM
@@ -48,6 +51,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
     private lateinit var myAdapter: CategoriesRecyclerAdapter
+    private lateinit var mostPopularFoodAdapter: MostPopularRecyclerAdapter
     lateinit var binding: FragmentHomeBinding
 
 
@@ -56,6 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         detailMvvm = ViewModelProviders.of(this)[DetailsMVVM::class.java]
         binding = FragmentHomeBinding.inflate(layoutInflater)
         myAdapter = CategoriesRecyclerAdapter()
+        mostPopularFoodAdapter = MostPopularRecyclerAdapter()
     }
 
     override fun onCreateView(
@@ -109,7 +114,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         })
 
+        mostPopularFoodAdapter.setOnClickListener(object : OnItemClick {
+            override fun onItemClick(meal: Meal) {
+                val intent = Intent(activity, MealDetailesActivity::class.java)
+                intent.putExtra(MEAL_ID, meal.idMeal)
+                intent.putExtra(MEAL_STR, meal.strMeal)
+                intent.putExtra(MEAL_THUMB, meal.strMealThumb)
+                startActivity(intent)
+            }
 
+        })
 
         myAdapter.onItemClicked(object : CategoriesRecyclerAdapter.OnItemCategoryClicked {
             override fun onClickListener(category: Category) {
@@ -120,7 +134,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         })
 
+        mostPopularFoodAdapter.setOnLongCLickListener(object : OnLongItemClick {
+            override fun onItemLongClick(meal: Meal) {
+                detailMvvm.getMealByIdBottomSheet(meal.idMeal)
+            }
 
+        })
 
         detailMvvm.observeMealBottomSheet()
             .observe(viewLifecycleOwner, object : Observer<List<MealDetail>> {
@@ -203,7 +222,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setMealsByCategoryAdapter(meals: List<Meal>) {
-
+        mostPopularFoodAdapter.setMealList(meals)
     }
 
     private fun setCategoryAdapter(categories: List<Category>) {
@@ -219,6 +238,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun preparePopularMeals() {
         binding.recViewMealsPopular.apply {
+            adapter = mostPopularFoodAdapter
             layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
         }
     }
