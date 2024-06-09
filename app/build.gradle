@@ -7,7 +7,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.easyfood"
+        applicationId "com.example.kursovayafood"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -33,7 +33,7 @@ android {
     buildFeatures{
         viewBinding true
     }
-    namespace 'com.example.easyfood'
+    namespace 'com.example.kursovayafood'
 }
 
 apply plugin: 'kotlin-kapt'

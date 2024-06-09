@@ -1,4 +1,8 @@
 package com.example.kursovayafood.ui.activites
 
-class MealDetailesActivity {
+import androidx.appcompat.app.AppCompatActivity
+
+class MealDetailesActivity : AppCompatActivity() {
+
+
 }
