@@ -10,11 +10,17 @@ import com.example.kursovayafood.databinding.CategoryCardBinding
 class CategoriesRecyclerAdapter : RecyclerView.Adapter<CategoriesRecyclerAdapter.CategoryViewHolder>() {
     private var categoryList:List<Category> = ArrayList()
     private lateinit var onItemClick: OnItemCategoryClicked
+    private lateinit var onLongCategoryClick:OnLongCategoryClick
 
     fun setCategoryList(categoryList: List<Category>){
         this.categoryList = categoryList
         notifyDataSetChanged()
     }
+
+    fun setOnLongCategoryClick(onLongCategoryClick:OnLongCategoryClick){
+        this.onLongCategoryClick = onLongCategoryClick
+    }
+
 
 
     fun onItemClicked(onItemClick: OnItemCategoryClicked){
@@ -51,4 +57,7 @@ class CategoriesRecyclerAdapter : RecyclerView.Adapter<CategoriesRecyclerAdapter
         fun onClickListener(category:Category)
     }
 
+    interface OnLongCategoryClick{
+        fun onCategoryLongCLick(category:Category)
+    }
 }
