@@ -10,7 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.kursovayafood.R
-
+import com.example.kursovayafood.adapters.MealRecyclerAdapter
+import com.example.kursovayafood.adapters.SetOnMealClickListener
 import com.example.kursovayafood.data.pojo.Meal
 import com.example.kursovayafood.databinding.ActivityCategoriesBinding
 import com.example.kursovayafood.mvvm.MealActivityMVVM
@@ -23,6 +24,7 @@ import com.example.kursovayafood.ui.fragments.HomeFragment.Companion.MEAL_THUMB
 class MealActivity : AppCompatActivity() {
     private lateinit var mealActivityMvvm: MealActivityMVVM
     private lateinit var binding: ActivityCategoriesBinding
+    private lateinit var myAdapter: MealRecyclerAdapter
     private var categoryNme = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +41,22 @@ class MealActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "No meals in this category", Toast.LENGTH_SHORT).show()
                     onBackPressed()
                 }else {
+                    myAdapter.setCategoryList(t!!)
                     binding.tvCategoryCount.text = categoryNme + " : " + t.size.toString()
                     hideLoading()
                 }
             }
         })
 
-
+        myAdapter.setOnMealClickListener(object : SetOnMealClickListener {
+            override fun setOnClickListener(meal: Meal) {
+                val intent = Intent(applicationContext, MealDetailesActivity::class.java)
+                intent.putExtra(MEAL_ID, meal.idMeal)
+                intent.putExtra(MEAL_STR, meal.strMeal)
+                intent.putExtra(MEAL_THUMB, meal.strMealThumb)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun hideLoading() {
@@ -69,7 +80,9 @@ class MealActivity : AppCompatActivity() {
     }
 
     private fun prepareRecyclerView() {
+        myAdapter = MealRecyclerAdapter()
         binding.mealRecyclerview.apply {
+            adapter = myAdapter
             layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         }
     }

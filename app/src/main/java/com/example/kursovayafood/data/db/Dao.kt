@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.Dao
 import com.example.kursovayafood.data.pojo.MealDB
+import com.example.kursovayafood.data.pojo.MealDetail
 
 @Dao
 interface Dao {

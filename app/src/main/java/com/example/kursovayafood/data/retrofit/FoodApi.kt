@@ -21,5 +21,4 @@ interface FoodApi {
 
     @GET("search.php?")
     fun getMealByName(@Query("s") s:String):Call<RandomMealResponse>
-
 }
